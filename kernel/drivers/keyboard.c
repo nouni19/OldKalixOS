@@ -15,7 +15,7 @@ const char scancode_to_char[] = {
 	'n', 'm', ',', '.', '/', '?', '?',
 	'?', ' '
 };
-const char sscancode_to_char[] = {
+const char shift_scancode_to_char[] = {
 	'?', KEY_ESC, '!', '@', '#', '$', '%',
 	'^', '&', '*', '(', ')', '_', '+',
 	KEY_BCK, '?', 'Q', 'W', 'E', 'R', 'T',
@@ -26,16 +26,8 @@ const char sscancode_to_char[] = {
 	'N', 'M', '<', '>', '?', '?', '?',
 	'?', ' '
 };
-unsigned char toAscii(unsigned char sc){
-	if (sc < 0x3A){
-		return scancode_to_char[sc];
-	} else{
-		return NO_KEY;
-	}
-	
-}
 
-char keyboard_int(){
+char _keyboard_int(){
 	uint8_t r =  read_port(KEYBOARD_DATA_PORT);
 	switch (r){
 		case 0x1D:
@@ -62,7 +54,7 @@ char keyboard_int(){
 		default:
 			if (r > 0x3A)
 				break;
-			return (isShift != isLock)?sscancode_to_char[(uint8_t)r]:scancode_to_char[(uint8_t)r];
+			return (isShift != isLock)?shift_scancode_to_char[(uint8_t)r]:scancode_to_char[(uint8_t)r];
 	}
 	return 0;
 }

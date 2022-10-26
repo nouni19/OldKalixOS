@@ -50,7 +50,7 @@ void *stivale2_get_tag(struct stivale2_struct *stivale2_struct, uint64_t id){
 
 // MAIN KERNEL SECTION (+NON-DRIVER FUNCTIONS)
 uint32_t xytest = 0;
-void keyboardInt(unsigned char c){ //gets called when valid key pressed (c)
+void keyboard_int(unsigned char c){ //gets called when valid key pressed (c)
 	if(c != KEY_BCK){
 		printc(xytest, 0, c, 0xff00ff, 0);
 		xytest++;
@@ -59,12 +59,12 @@ void keyboardInt(unsigned char c){ //gets called when valid key pressed (c)
 		printc(xytest, 0, ' ', 0xff00ff, 0);
 	}
 }
-void mouseInt(MouseState state){ //gets called when mouse updated (state)
+void mouse_int(MouseState state){ //gets called when mouse updated (state)
 	if (state.leftb)
 		pixel(state.x, state.y, 0xffffff);
 }
 void _start(struct stivale2_struct *stivale2_struct){
-	settimer(10000); //init timer
+	set_timer(10000); //init timer
 	//init memory
 	struct stivale2_struct_tag_memmap *memmap_ptr = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_MEMMAP_ID);
 	struct stivale2_struct_tag_hhdm *hhdm_stptr = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_HHDM_ID);
@@ -82,10 +82,10 @@ void _start(struct stivale2_struct *stivale2_struct){
 	install_idt(); //init IDT
 	init_mouse(); //init mouse
 	prints(0, 0, "Booted kernel successfully!", 0x00ff00, 0);
-	uint8_t elfresult = run_elf(modules->modules[1].begin, modules->modules[1].end-modules->modules[1].begin, 4096);
-	char buf[32];
-	uitoa(elfresult, buf, 16);
-	prints(0, 1, buf, 0xff00ff, 0);
-	printsl(0, 2, modules->modules[1].begin+1, 0xff00ff, 0, 3);
+	//uint8_t elfresult = run_elf(modules->modules[1].begin, modules->modules[1].end-modules->modules[1].begin, 4096);
+	//char buf[32];
+	//uitoa(elfresult, buf, 16);
+	//prints(0, 1, buf, 0xff00ff, 0);
+	//printsl(0, 2, modules->modules[1].begin+1, 0xff00ff, 0, 3);
 	for(;;){asm("hlt");}
 }

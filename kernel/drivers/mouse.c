@@ -64,7 +64,7 @@ static int handler_cycle = 0;
 static MousePacket current_packet;
 static int discard_packet = 0;
 
-bool mouse_int(){
+bool _mouse_int(){
 	if(ticks < 250){
 		read_port(0x60);
 		return false;
@@ -122,7 +122,7 @@ bool mouse_int(){
 	return false;
 }
 
-MouseState getMouse(){
+MouseState get_mouse_state(){
 	MouseState state;
 	state.leftb = left_pressed;
 	state.middleb = middle_pressed;

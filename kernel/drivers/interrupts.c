@@ -111,14 +111,14 @@ void interrupt_handler(uint32_t interrupt, uint32_t errorcode){
 			if (panicked){
 				reboot();
 			}
-			keyboardc = keyboard_int();
+			keyboardc = _keyboard_int();
 			if(keyboardc && (keyboardc < 0x7f))
-				keyboardInt(keyboardc);
+				keyboard_int(keyboardc);
 			break;
 		case 44: // mouse
-			mouseDone = mouse_int();
+			mouseDone = _mouse_int();
 			if(mouseDone)
-				mouseInt(getMouse());
+				mouse_int(get_mouse_state());
 			break;
 		default:
 			except("UNKNOWN INTERRUPT");

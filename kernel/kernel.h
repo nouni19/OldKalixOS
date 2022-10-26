@@ -1,4 +1,4 @@
 #pragma once
 #include "drivers/mouse.h"
-void keyboardInt(unsigned char c);
-void mouseInt(MouseState state);
+void keyboard_int(unsigned char c);
+void mouse_int(MouseState state);

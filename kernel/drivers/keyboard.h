@@ -11,5 +11,4 @@ bool isShift;
 bool isCtrl;
 bool isAlt;
 bool isLock;
-unsigned char toAscii(unsigned char sc);
-char keyboard_int();
+char _keyboard_int();

@@ -57,5 +57,5 @@ uint64_t ticks;
 uint32_t process;
 uint32_t processn;
 ProcessState *processes[];
-void settimer(int hz);
+void set_timer(int hz);
 uint8_t run_elf(void* data, uint32_t bytes, uint32_t stackbytes);

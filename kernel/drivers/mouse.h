@@ -11,5 +11,5 @@ typedef struct {
 	uint8_t y_mov;
 } MousePacket;
 void init_mouse();
-bool mouse_int();
-MouseState getMouse();
+bool _mouse_int();
+MouseState get_mouse_state();
