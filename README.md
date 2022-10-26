@@ -10,5 +10,5 @@ x86_64 kernel made using C and assembly, and Limine bootloader
 * [x] PS/2 keyboard and mouse
 * [x] Physical memory manager
 * [x] Virtual memory manager
-* [] ELF loader
-* [] FAT32 filesystem
+* [ ] ELF loader
+* [ ] FAT32 filesystem
