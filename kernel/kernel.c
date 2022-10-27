@@ -64,7 +64,7 @@ void mouse_int(MouseState state){ //gets called when mouse updated (state)
 		pixel(state.x, state.y, 0xffffff);
 }
 void _start(struct stivale2_struct *stivale2_struct){
-	set_timer(10000); //init timer
+	settimer(10000); //init timer
 	//init memory
 	struct stivale2_struct_tag_memmap *memmap_ptr = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_MEMMAP_ID);
 	struct stivale2_struct_tag_hhdm *hhdm_stptr = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_HHDM_ID);

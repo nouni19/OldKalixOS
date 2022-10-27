@@ -11,12 +11,12 @@ uint16_t Ymax;
 char defAtt = 0x0f;
 uint8_t font_array[];
 
-void pixel(int x, int y, uint32_t color){
+void pixel(int x, int y, uint32_t color){ // color one pixel
 	if ((fb_width > x) && (fb_height > y)){
 		fb_addr[y*(fb_pitch / sizeof(uint32_t)) + x] = color;
 	}
 }
-void rectangle(int x1, int y1, int x2, int y2, uint32_t color){
+void rectangle(int x1, int y1, int x2, int y2, uint32_t color){ //color rectangle
 	for (int x = x1; x<x2; x++){
 		for (int y = y1;y<y2;y++){
 			pixel(x, y, color);
@@ -24,7 +24,7 @@ void rectangle(int x1, int y1, int x2, int y2, uint32_t color){
 	}
 }
 
-void printc(int x, int y, char ch, uint32_t att, uint32_t back) {
+void printc(int x, int y, char ch, uint32_t att, uint32_t back) { // print character
 	int cx = x * 8;
 	int cy = y * 16;
 	uint8_t* symbol = font_array+ch*16;
@@ -52,7 +52,7 @@ void printc(int x, int y, char ch, uint32_t att, uint32_t back) {
 	write_port(0xE9, ch);
 }
 
-void prints(int x, int y, char str[], uint32_t att, uint32_t back){
+void prints(int x, int y, char str[], uint32_t att, uint32_t back){ // print null-terminated string
 	int strI = 0;
 	int xT = x;
 	int yT = y;
@@ -69,7 +69,7 @@ newline:
 	}
 }
 
-void printsl(int x, int y, char str[], uint32_t att, uint32_t back, uint32_t len){
+void printsl(int x, int y, char str[], uint32_t att, uint32_t back, uint32_t len){ // print string of length len
 	uint32_t strI = 0;
 	int xT = x;
 	int yT = y;
@@ -86,13 +86,13 @@ newline:
 	}
 }
 
-void clear(uint32_t att){
+void clear(uint32_t att){ // fill screen 
 	for(int i=0;i<fb_pitch*fb_height;i++){
 		fb_addr[i] = att;
 	}
 }
 
-uint8_t font_array[] = {
+uint8_t font_array[] = { // font
 	0x80, 0x9e, 0x92, 0x52, 0x52, 0x52, 0x3e, 0x20, 0x20, 0x10, 0x10, 0x10, 0x08, 0x08, 0x08, 0x08,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
 	0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,

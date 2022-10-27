@@ -9,12 +9,12 @@
 #include "../mem/vmm_mem.h"
 #include "poweroff.h"
 bool panicked = false;
-void pic_ack(unsigned int interrupt){
+void pic_ack(unsigned int interrupt){ // send acknowledge to PIC
 	if(interrupt >= 40) write_port(PIC_2, 0x20);
 	write_port(PIC_1, 0x20);
 }
 
-void pic_remap(int offset1, int offset2){
+void pic_remap(int offset1, int offset2){ // remap PIC
 	write_port(PIC_1, PIC_ICW1_INIT + PIC_ICW1_ICW4);
 	write_port(PIC_2, PIC_ICW1_INIT + PIC_ICW1_ICW4);
 	write_port(PIC_1_DATA, offset1);
@@ -34,7 +34,7 @@ void pic_remap(int offset1, int offset2){
 struct IDTDescriptor idt_descriptors[INT_DESC_COUNT];
 struct IDT idt;
 
-void init_int_desc(int index, uint64_t address){
+void init_int_desc(int index, uint64_t address){ // initialize interrrupt descripter
 	idt_descriptors[index].offset_high = (address >> 32) & 0xFFFFFFFF;
 	idt_descriptors[index].offset_mid = (address >> 16) & 0xFFFF;
 	idt_descriptors[index].offset_low = (address & 0xFFFF);
@@ -43,7 +43,7 @@ void init_int_desc(int index, uint64_t address){
 	idt_descriptors[index].type = 0x8E;
 	idt_descriptors[index].ist = 0;
 }
-void init_uint_desc(int index, uint64_t address){
+void init_uint_desc(int index, uint64_t address){ // initialize user space interrupt descripter
 	idt_descriptors[index].offset_high = (address >> 32) & 0xFFFFFFFF;
 	idt_descriptors[index].offset_mid = (address >> 16) & 0xFFFF;
 	idt_descriptors[index].offset_low = (address & 0xFFFF);
@@ -63,14 +63,14 @@ void install_idt(){
 	init_int_desc(6, (uint64_t) interrupt_handler_6); // undefined opcode
 	init_int_desc(8, (uint64_t) interrupt_handler_8); // double fault
 	init_int_desc(14, (uint64_t) interrupt_handler_14); // page fault
-	init_uint_desc(128, (uint64_t) interrupt_handler_128); // system call
+	init_uint_desc(128, (uint64_t) interrupt_handler_128); // system call (int 0x80)
 	idt.address = (uint64_t) &idt_descriptors;
 	idt.size = sizeof(struct IDTDescriptor) * INT_DESC_COUNT;
 	asm volatile("lidt %0" : : "m"(idt));
 	pic_remap(PIC_1_OFFSET, PIC_2_OFFSET);
 }
 
-void except(char str[]){
+void except(char str[]){ // kernel panic
 	prints(0, 0, "KERNEL PANIC - PRESS ANY KEY TO RESTART - DEBUG INFO:", 0xff0000, 0xff);
 	prints(0, 1, str, 0xff0000, 0xff);
 	panicked = true;
@@ -80,7 +80,7 @@ void except(char str[]){
 
 bool mouseDone = false;
 MouseState mouse_state;
-void interrupt_handler(uint32_t interrupt, uint32_t errorcode){
+void interrupt_handler(uint32_t interrupt, uint32_t errorcode){ // handle most interrupts
 	char errorcodeSTR[32];
 	uitoa(errorcode, errorcodeSTR, 16);
 	char keyboardc;
@@ -126,7 +126,7 @@ void interrupt_handler(uint32_t interrupt, uint32_t errorcode){
 	}
 	pic_ack(interrupt);
 }
-void syscall_handler(uint64_t type, uint64_t v1, uint64_t v2){
+void syscall_handler(uint64_t type, uint64_t v1, uint64_t v2){ // handles syscalls (from userspace)
 	if(type == 0){
 		printc(0, v1, (uint8_t)v2, 0xffffff, 0);
 	}

@@ -7,16 +7,16 @@ uint64_t tticks = 0;
 uint64_t ticks = 0;
 uint32_t process = 0;
 uint32_t processnum = 0;
-ProcessState *processes[100];
+ProcessState *processes[100]; // array of running processes, storing all registers
 
-void settimer(int hz){
+void settimer(int hz){ // change timer frequency
 	int divisor = 1193180 / hz;
 	write_port(0x43, 0x36);
 	write_port(0x40, divisor & 0xFF);
 	write_port(0x40, divisor >> 8);
 }
 
-ProcessState* clock_handler(ProcessState *stack){
+ProcessState* clock_handler(ProcessState *stack){ // clock interrupt handler
 	tticks++;
 	if(!(tticks % 10))
 		ticks++;
@@ -28,7 +28,7 @@ ProcessState* clock_handler(ProcessState *stack){
 	return processes[process];
 }
 
-uint8_t run_elf(void* data, uint32_t bytes, uint32_t stackbytes){ // stackbytes 4096 aligned, argv max 4096 bytes
+uint8_t run_elf(void* data, uint32_t bytes, uint32_t stackbytes){ // runs elf: stackbytes 4096 aligned, argv max 4096 bytes
 	if(bytes <= 120)
 		return ELF_WRONG_SIZE;
 	if(((ELFHeader*)data)->magic[0] != 0x7F)
