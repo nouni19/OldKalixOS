@@ -48,7 +48,9 @@ void *stivale2_get_tag(struct stivale2_struct *stivale2_struct, uint64_t id){
 }
 
 
-// MAIN KERNEL SECTION (+NON-DRIVER FUNCTIONS)
+// MAIN KERNEL SECTION
+
+
 uint32_t xytest = 0;
 void keyboard_int(unsigned char c){ //gets called when valid key pressed (c)
 	if(c != KEY_BCK){

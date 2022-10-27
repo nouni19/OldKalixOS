@@ -4,7 +4,7 @@ bool isShift = false;
 bool isCtrl = false;
 bool isAlt = false;
 bool isLock = false;
-const char scancode_to_char[] = {
+const char scancode_to_char[] = { // array to convert from scancodes to ascii characters
 	'?', KEY_ESC, '1', '2', '3', '4', '5',
 	'6', '7', '8', '9', '0', '-', '=',
 	KEY_BCK, '?', 'q', 'w', 'e', 'r', 't',
@@ -15,7 +15,7 @@ const char scancode_to_char[] = {
 	'n', 'm', ',', '.', '/', '?', '?',
 	'?', ' '
 };
-const char shift_scancode_to_char[] = {
+const char shift_scancode_to_char[] = { // array to convert from scancodes to ascii characters (capital letters)
 	'?', KEY_ESC, '!', '@', '#', '$', '%',
 	'^', '&', '*', '(', ')', '_', '+',
 	KEY_BCK, '?', 'Q', 'W', 'E', 'R', 'T',
@@ -27,7 +27,7 @@ const char shift_scancode_to_char[] = {
 	'?', ' '
 };
 
-char _keyboard_int(){
+char _keyboard_int(){ // handles keyboard interrupt, and returns the character which was typed
 	uint8_t r =  read_port(KEYBOARD_DATA_PORT);
 	switch (r){
 		case 0x1D:
