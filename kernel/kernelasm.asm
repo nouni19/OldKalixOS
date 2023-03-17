@@ -71,9 +71,9 @@ interrupt_handler_32:
 	mov rdi, rsp
 	call clock_handler
 	mov rsp, rax
-	pop_all
     mov al, 0x20
     out 0x20, al
+	pop_all
     sti 
 	iretq
 

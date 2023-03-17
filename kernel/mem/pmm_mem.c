@@ -31,10 +31,7 @@ void* pmalloc(uint32_t blocks){
 			freebl++;
 			if(freebl == blocks){
 				pmm_ureg(p,freebl);
-				char buf2[32];
-				uitoa(p,buf2,16);
-				prints(0,6,buf2,0xffffff,0);
-				return (void*)(p*4096);
+				return (void*)(p<<12);
 			}
 		}
 	}
