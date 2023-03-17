@@ -42,31 +42,26 @@ jmp $
 %macro int_handler 1
 global interrupt_handler_%1
 interrupt_handler_%1:
-    cli
     push_all
 	mov rdi, %1
 	call interrupt_handler
     pop_all
-    sti
 	iretq
 %endmacro
 
 %macro eint_handler 1
 global interrupt_handler_%1
 interrupt_handler_%1:
-    cli
 	pop rsi
     push_all
 	mov rdi, %1
 	call interrupt_handler
 	pop_all
-    sti
     iretq
 %endmacro
 [extern clock_handler]
 global interrupt_handler_32
 interrupt_handler_32:
-    cli
 	push_all
 	mov rdi, rsp
 	call clock_handler
@@ -74,7 +69,6 @@ interrupt_handler_32:
     mov al, 0x20
     out 0x20, al
 	pop_all
-    sti 
 	iretq
 
 int_handler 0
