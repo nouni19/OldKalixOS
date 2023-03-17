@@ -46,5 +46,5 @@ struct IDTDescriptor{
 void install_idt();
 
 void interrupt_handler(uint32_t interrupt, uint32_t errorcode);
-
+void except(char str[]);
 #endif

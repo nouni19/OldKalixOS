@@ -3,8 +3,6 @@ jmp $
 
 %macro push_all 0
     push rax
-    mov rax, cr3
-    push rax
     push rbx
     push rcx
     push rdx
@@ -36,8 +34,6 @@ jmp $
     pop rdx
     pop rcx
     pop rbx
-    pop rax
-    mov cr3, rax
     pop rax
 %endmacro
 
@@ -77,7 +73,8 @@ interrupt_handler_32:
 	mov rsp, rax
 	pop_all
     mov al, 0x20
-    out 0x20, al 
+    out 0x20, al
+    sti 
 	iretq
 
 int_handler 0

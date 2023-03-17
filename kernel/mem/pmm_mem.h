@@ -2,6 +2,9 @@
 #include <stdint.h>
 #include <stddef.h>
 #include "../stivale2.h"
+#define PMM_REGU(block) (pmm_map[((uint64_t)block)/8] & (1<<(((uint64_t)block)%8))?true:false)
+#define ALIGN(addr)((uint64_t)addr & ~((uint64_t)0x3FF))
+#define TOBLOCKS(addr)(ALIGN(addr) / 4096)
 uint8_t* pmm_map;
 uint64_t hhdm;
 uint64_t ramb;

@@ -1,9 +1,6 @@
 #include "pmm_mem.h"
 #include "../drivers/vga.h"
 #include "stdbool.h"
-#define PMM_REGU(block) (pmm_map[block/8] & (1<<(block%8)))
-#define ALIGN(addr)(addr & ~(0x3FF))
-#define TOBLOCKS(addr)(ALIGN(addr) / 4096)
 uint64_t _kernel_start;
 uint64_t _kernel_end;
 void* slabH = 0;
@@ -23,17 +20,22 @@ void pmm_unreg(uint32_t block, uint32_t blocks){ //unuse region, block 0indexed
 void* pmalloc(uint32_t blocks){
 	uint32_t freebl = 0;
 	uint64_t p = 0;
-	for(uint32_t i=0;i<pmm_map_size*8;i++){
-		if(freebl >= blocks){
-			pmm_ureg(TOBLOCKS(p), blocks); 
-			memset(p+hhdm, 0, 4096*blocks);
-			return (void*)p;
-		}
-		if(!PMM_REGU(i)){
-			if(!freebl) p = i*4096;
-			freebl++;
-		}else{
+	for(uint32_t i = 0; i<pmm_map_size*8; i++){
+		if(PMM_REGU(i)){
 			freebl = 0;
+			p = 0;
+		} else{
+			if(freebl == 0){
+				p = i;
+			}
+			freebl++;
+			if(freebl == blocks){
+				pmm_ureg(p,freebl);
+				char buf2[32];
+				uitoa(p,buf2,16);
+				prints(0,6,buf2,0xffffff,0);
+				return (void*)(p*4096);
+			}
 		}
 	}
 	return 0;
@@ -54,6 +56,7 @@ void pmm_init(struct stivale2_struct_tag_memmap *stmap){
 	for(uint64_t i=0; i<stmap->entries; i++){
 		if((stmap->memmap[i].type == 1) && (stmap->memmap[i].length >= bneeded)){ 
 			pmm_map = (uint8_t*)(stmap->memmap[i].base);
+			pmm_map += hhdm;
 			break;
 		}
 	}
@@ -66,7 +69,6 @@ void pmm_init(struct stivale2_struct_tag_memmap *stmap){
 		}
 	}
 	pmm_map_size = bneeded;
-	pmm_map += hhdm;
 }
 void* spmalloc(){
 	void* returned = 0;
@@ -133,10 +135,10 @@ char* pagecontent(uint8_t* addr, char* buffer){
 }
 
 void showpage(void* addr){
-	char buffer[10000];
+	char* buffer = pmalloc(100);
 	uint32_t block = TOBLOCKS((uint64_t)addr);//				|
 	if(ALIGN((uint64_t)addr) == addr){ //this double faults???? v
-		//prints(30, 1, PMM_REGU((uint64_t)addr)?"MEMDEBUG:BLOCK USED":"MEMDEBUG:BLOCK FREE", PMM_REGU((uint64_t)addr)?0xFF0000:0x00FF00, 0);
+		prints(30, 1, PMM_REGU((uint64_t)addr)?"MEMDEBUG:BLOCK USED":"MEMDEBUG:BLOCK FREE", PMM_REGU((uint64_t)addr)?0xFF0000:0x00FF00, 0);
 	} else{
 		prints(30, 1, "MEMDEBUG:ADDR UNALIGNED", 0x40DCFF, 0);
 	}

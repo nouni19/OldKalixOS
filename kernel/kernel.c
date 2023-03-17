@@ -4,6 +4,7 @@
 #include "drivers/vga.h"
 #include "drivers/mouse.h"
 #include "drivers/poweroff.h"
+#include "drivers/gdt.h"
 #include "tasks/tasks.h"
 #include "mem/pmm_mem.h"
 #include "mem/vmm_mem.h"
@@ -84,10 +85,28 @@ void _start(struct stivale2_struct *stivale2_struct){
 	install_idt(); //init IDT
 	init_mouse(); //init mouse
 	prints(0, 0, "Booted kernel successfully!", 0x00ff00, 0);
+	char buf2[32];
+	void* testpointer = pmalloc(1);
+	if((uint64_t)testpointer % 4096){
+		prints(0,0,"OUCH",0xffffff,0);
+	}
+	void* testpointer2 = pmalloc(1);
+	if((uint64_t)testpointer2 % 4096){
+		prints(0,4,"OUCHHH",0xffffff,0);
+	}
+	if(PMM_REGU(testpointer)){
+		prints(0,5,"YAY",0xffffff,0);
+	}
+	uitoa(testpointer,buf2,16);
+	prints(0,1,buf2,0xffffff,0);
+	uitoa(testpointer2,buf2,16);
+	prints(0,2,buf2,0xffffff,0);
+	uitoa(pmalloc(1),buf2,16);
+	prints(0,3,buf2,0xffffff,0);
 	//uint8_t elfresult = run_elf(modules->modules[1].begin, modules->modules[1].end-modules->modules[1].begin, 4096);
 	//char buf[32];
 	//uitoa(elfresult, buf, 16);
-	//prints(0, 1, buf, 0xff00ff, 0);
-	//printsl(0, 2, modules->modules[1].begin+1, 0xff00ff, 0, 3);
+	//prints(0, 2, buf, 0xff00ff, 0);
+	//printsl(0, 3, modules->modules[1].begin+1, 0xff00ff, 0, 3);
 	for(;;){asm("hlt");}
 }
