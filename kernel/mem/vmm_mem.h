@@ -1,6 +1,7 @@
 #include "stdint.h"
 #include "stdbool.h"
 #define BASE_FLAGS 0b00001011
+#define PHYS_TO_VIRT(addr) ((uint64_t*)(((uint64_t)addr)+hhdm))
 uint64_t* start_pml4;
 uint64_t* base_pml4;
 uint64_t read_cr3();

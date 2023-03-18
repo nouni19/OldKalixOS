@@ -1,15 +1,21 @@
 #include <stdint.h>
 #pragma once
-#define ELF_WRONG_MAGIC 0x01
-#define ELF_WRONG_SIZE 0x02
-#define ELF_WRONG_ARCH 0x03
-#define ELF_WRONG_BITTAGE 0x04
-#define ELF_WRONG_ENDIANNESS 0x05
-#define ELF_NOT_EXECUTABLE 0x06
+typedef enum{
+	SUCCESS,
+	WRONG_MAGIC,
+	WRONG_SIZE,
+	WRONG_ARCH,
+	WRONG_BITTAGE,
+	WRONG_ENDIANNESS,
+	NOT_EXECUTABLE
+} LOADELF_RESULT;
 uint32_t processnum;
 typedef struct {
 	uint64_t r15, r14, r13, r12, r11, r10, r9, r8, rbp, rdi, rsi, rdx, rcx, rbx, rax, intno, ec, rip, cs, rflags, rsp, ss; 
 } ProcessState;
+typedef struct{
+	uint64_t cr3;
+} ProcessInfo;
 typedef struct {
 	uint8_t magic[4];
 	uint8_t bits;
@@ -56,6 +62,7 @@ typedef struct {
 uint64_t ticks;
 uint32_t process;
 uint32_t processn;
-ProcessState *processes[];
+ProcessState *processes[100];
+ProcessInfo processesinfo[100];
 void settimer(int hz);
-uint8_t run_elf(void* data, uint32_t bytes, uint32_t stackbytes);
+LOADELF_RESULT run_elf(void* data, uint32_t bytes, uint32_t stackbytes);

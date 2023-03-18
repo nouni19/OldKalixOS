@@ -68,6 +68,7 @@ void mouse_int(MouseState state){ //gets called when mouse updated (state)
 }
 void _start(struct stivale2_struct *stivale2_struct){
 	settimer(10000); //init timer
+	//__asm__("cli");
 	//init memory
 	struct stivale2_struct_tag_memmap *memmap_ptr = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_MEMMAP_ID);
 	struct stivale2_struct_tag_hhdm *hhdm_stptr = stivale2_get_tag(stivale2_struct, STIVALE2_STRUCT_TAG_HHDM_ID);
@@ -85,10 +86,10 @@ void _start(struct stivale2_struct *stivale2_struct){
 	install_idt(); //init IDT
 	init_mouse(); //init mouse
 	prints(0, 0, "Booted kernel successfully!", 0x00ff00, 0);
-	//uint8_t elfresult = run_elf(modules->modules[1].begin, modules->modules[1].end-modules->modules[1].begin, 4096);
-	//char buf[32];
-	//uitoa(elfresult, buf, 16);
-	//prints(0, 2, buf, 0xff00ff, 0);
-	//printsl(0, 3, modules->modules[1].begin+1, 0xff00ff, 0, 3);
+	uint8_t elfresult = run_elf(modules->modules[1].begin, modules->modules[1].end-modules->modules[1].begin, 4096);
+	char buf[32];
+	uitoa(elfresult, buf, 16);
+	prints(0, 2, buf, 0xff00ff, 0);
+	printsl(0, 3, modules->modules[1].begin+1, 0xff00ff, 0, 3);
 	for(;;){asm("hlt");}
 }

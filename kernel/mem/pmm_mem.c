@@ -1,15 +1,10 @@
 #include "pmm_mem.h"
 #include "../drivers/vga.h"
 #include "stdbool.h"
+#include "../misc/utils.h"
 uint64_t _kernel_start;
 uint64_t _kernel_end;
 void* slabH = 0;
-void *memset (void *dest, uint8_t val, size_t len){
-  unsigned char *ptr = dest;
-  while (len-- > 0)
-    *ptr++ = val;
-  return dest;
-}
 
 void pmm_ureg(uint32_t block, uint32_t blocks){ //use region, block 0indexed
 	for(uint32_t i=0;i<blocks;i++) pmm_map[(block+i)/8] |= 1<<(block % 8);
@@ -31,7 +26,9 @@ void* pmalloc(uint32_t blocks){
 			freebl++;
 			if(freebl == blocks){
 				pmm_ureg(p,freebl);
-				return (void*)(p<<12);
+				void* returned = (void*)(p<<12);
+				memset(returned,0,4096);
+				return returned;
 			}
 		}
 	}

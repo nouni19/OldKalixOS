@@ -1,5 +1,11 @@
 #include "utils.h"
 // all of these are copied
+void *memset (void *dest, uint8_t val, size_t len){
+  unsigned char *ptr = dest;
+  while (len-- > 0)
+    *ptr++ = val;
+  return dest;
+}
 int abs (int i){
   return i < 0 ? -i : i;
 }
@@ -83,4 +89,10 @@ int strcmp(const char* s1, const char* s2){
         s2++;
     }
     return *(const unsigned char*)s1 - *(const unsigned char*)s2;
+}
+uint64_t max(uint64_t a, uint64_t b){
+    return a>b?a:b;
+}
+uint64_t min(uint64_t a, uint64_t b){
+    return a<b?a:b;
 }
