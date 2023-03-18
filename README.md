@@ -10,7 +10,8 @@ x86_64 kernel made using C and assembly, and Limine bootloader
 * [x] PS/2 keyboard and mouse
 * [x] Physical memory manager
 * [x] Virtual memory manager
-* [ ] ELF loader
+* [x] ELF loader
+* [ ] Preemptive multitasker
 * [ ] FAT32 filesystem
 
 ## Requirements
@@ -23,3 +24,7 @@ x86_64 kernel made using C and assembly, and Limine bootloader
 ## Building
 
 `cd kernel` then `make` to build, and `cd kernel` then `make qemu` or `make qemudebug` to run
+
+## Note
+
+This contains a lot of testing code (random prints), copied code, and unfunctional code
